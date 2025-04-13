@@ -2,6 +2,8 @@
 
 Este proyecto implementa una **arquitectura de microservicios** en Node.js que permite **importar, consultar y paginar millones de registros de casos COVID-19** usando una base de datos PostgreSQL y nodejs con type "module" con Express para la API , backend.
 
+## Dataset de positivos_covid.csv: https://datosabiertos.gob.pe/dataset/casos-positivos-por-covid-19-ministerio-de-salud-minsa
+
 ## 📦 Estructura de Microservicios
 
 ```
