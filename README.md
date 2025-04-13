@@ -172,3 +172,36 @@ GET http://localhost:3002/api/buscar/departamento/LIMA?page=1&limit=10
 **Proyectos con impacto, escalabilidad y performance.**
 
 ---
+
+# Dockeniar # 🦠 COVID Microservices System (dataset-microservicios-millon) – Carga y Consulta de Datos Masivos
+
+## añadir los siguiente archivos:
+
+- EN la carpeta raíz del proyecto , añade un archivo docker-compose.yml
+  -en cada microservicio en la carpeta raíz de cada microservicio , añade un archivo en cada uno DockerFile y .dockerignore
+  -En la carpeta raíz del proyecto , añade un archivo init.sql
+  -modificar el .env en cada microservicio con para evitar incompatibilidades del docker :
+  ```env
+  PGHOST=db
+  PGUSER=postgres
+  PGPASSWORD=123456
+  PGDATABASE=positivos_covid
+  PGPORT=5432
+  ```
+
+## Luego de terminar las configuraciones necesarias usamos los siguientes comando para dokenizar:
+
+```
+-docker-compose down -v
+-docker-compose build --no-cache
+-docker-compose up -d (se creó el docker)
+
+```
+
+## Verificamos si correo el docker :
+
+-docker-compose ps ( no debe haber alertas o errores)
+-verificar si existe la base de datos creada y su tabla: docker logs covid-postgres si no hay errores, y docker exec -it covid-postgres psql -U postgres -d positivos_covid para entrar a la tabla creada y puedes usar los comandos de sql para ver (\dt , SELECT* FROM positivos_covid; , SELECT COUNT(*) FROM positivos_covid; )
+
+- usando los endpoints en postman que es lo mismo que el local que son los de GET http://localhost:8081/cargar sin body , GET con http://localhost:3002/api/buscar/departamento/LIMA?page=1&limit=16 sin body y POST con body igual al de local que se meniona al inicio con http://localhost:3002/api/nuevo , usa los comando : -docker-compose logs -f csv-importer-service: para verificar si los endpoints en postman funcionan del servicio de la carpeta "csv-importer-service"
+- docker-compose logs -f covid-query-service : si los endpoints en postman funcionan del servicio de la carpeta "covid-query-service"

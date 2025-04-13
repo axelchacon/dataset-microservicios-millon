@@ -1,0 +1,49 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:15
+    container_name: covid-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: positivos_covid
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql # 👈 Ejecuta el script al iniciar
+
+  covid-query-service:
+    build: ./covid-query-service
+    container_name: covid-query-service
+    depends_on:
+      - db
+    ports:
+      - "3002:3002"
+    environment:
+      PGHOST: db
+      PGUSER: postgres
+      PGPASSWORD: 123456
+      PGDATABASE: positivos_covid
+      PGPORT: 5432
+
+  csv-importer-service:
+    build: ./csv-importer-service
+    container_name: csv-importer-service
+    depends_on:
+      - db
+    ports:
+      - "8081:8081"
+    environment:
+      PGHOST: db
+      PGUSER: postgres
+      PGPASSWORD: 123456
+      PGDATABASE: positivos_covid
+      PGPORT: 5432
+    volumes:
+      - ./csv-importer-service/positivos_covid.csv:/app/positivos_covid.csv
+
+volumes:
+  pgdata:
